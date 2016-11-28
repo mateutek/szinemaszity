@@ -2,7 +2,9 @@
 
 var cc = module.exports = {};
 var request = require('request');
-var debug = require('debug')('cinema-city:server');
+var debug = require('debug')('cinema-city:data');
+var Promise = require('bluebird');
+
 
 var data = {};
 
@@ -23,17 +25,24 @@ cc.loadCinemaData = function(){
             accept: '*/*'
         },
         form: {
-            date:'27/11/2016',
+            date:'30/11/2016',
             locationId:'1010311',
             venueTypeId:0
         } };
-
-    request.post(options,
-        function (error, response, body) {
-            debug('Data set to '+body);
-            cc.setData(body);
-            return body;
+    return new Promise(function(resolve, reject){
+        request.post(options,
+            function (error, response, body) {
+                debug('Data set to ');
+                debug(body);
+                cc.setData(body);
+                if(error){
+                    reject(error);
+                }else{
+                    resolve(data);
+                }
+            });
     });
+
 };
 
 cc.setData = function(d){
@@ -41,5 +50,5 @@ cc.setData = function(d){
 };
 
 cc.getData = function(){
-    return data;
+
 };

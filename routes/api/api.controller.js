@@ -12,9 +12,11 @@
 var cc = require('../../bin/cinemaCity');
 
 exports.index = function(req, res) {
-    cc.loadCinemaData();
+
     // return res.json(200, cc.getData());
-    res.render('cinema', { data: cc.getData() });
+    cc.loadCinemaData().then(function(data) {
+        res.send(data).status(200);
+    });
 };
 
 exports.show = function(req, res) {
